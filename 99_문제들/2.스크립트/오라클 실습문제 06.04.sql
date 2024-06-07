@@ -80,28 +80,38 @@ AND HIRE_DATE BETWEEN '90.01.01' AND '00.12.01' AND SALARY >= 2700000;
 
 
 --15. EMPLOYEE테이블에서 사원 명과 직원의 주민번호를 이용하여 생년, 생월, 생일 조회 
-
+SELECT EMP_NAME, SUBSTR(EMP_NO, 1, 2)||'년' AS "생년",
+                SUBSTR(EMP_NO, 3, 2)||'월' AS "생월",
+                SUBSTR(EMP_NO, 5, 2)||'일' AS "생일"
+FROM EMPLOYEE ;
 
 
 --16. EMPLOYEE테이블에서 사원명, 주민번호 조회 (단, 주민번호는 생년월일만 보이게 하고, '-'다음 값은 '*'로 바꾸기) 
-
+SELECT EMP_NAME, RPAD(SUBSTR(EMP_NO, 1, 6), 14, '*') AS "주민번호"
+FROM EMPLOYEE;
 
 
 --17. EMPLOYEE테이블에서 사원명, 입사일-오늘, 오늘-입사일 조회 
 --(단, 각 별칭은 근무일수1, 근무일수2가 되도록 하고 모두 정수(내림), 양수가 되도록 처리) 
-
+SELECT EMP_NAME, ABS(FLOOR(HIRE_DATE - SYSDATE))AS "근무일수1" , 
+                FLOOR(SYSDATE-HIRE_DATE) AS "근무일수2"
+FROM EMPLOYEE;
 
 
 --18. EMPLOYEE테이블에서 사번이 홀수인 직원들의 정보 모두 조회 
-
-
-
+/*
+SELECT *
+FROM EMPLOYEE;
+WHERE SUBSTAR(EMP_NO,6,1) 함수식 일단 보류  
+*/
 --19. EMPLOYEE테이블에서 근무 년수가 20년 이상인 직원 정보 조회 
-
-
-
+/*
+SELECT *
+FROM EMPLOYEE
+WHERE   SYSDATE < ADD_MONTH(HIRE_DATE, 20)
+*/
 --20. EMPLOYEE 테이블에서 사원명, 급여 조회 (단, 급여는 '\9,000,000' 형식으로 표시) 
-
+SELECT EMP_NAME, SALARY
 
 
 
@@ -128,7 +138,10 @@ AND HIRE_DATE BETWEEN '90.01.01' AND '00.12.01' AND SALARY >= 2700000;
 
 --25. EMPLOYEE테이블에서 직원들의 입사일로부터 년도만 가지고 각 년도별 입사 인원수 조회 
 --전체 직원 수, 2001년, 2002년, 2003년, 2004년
-
+    /*
+    
+    
+    */
 
 
 
