@@ -154,7 +154,7 @@ FROM TB_DEPARTMENT;
 
 
 --11. 지도 교수를 배정받지 못핚 학생의 수는 몇 명 정도 되는 알아내는 SQL 문을 
---작성하시오.  ※
+--작성하시오.  
 SELECT COUNT(*)
 FROM TB_STUDENT
 WHERE COACH_PROFESSOR_NO IS NULL;
@@ -172,12 +172,20 @@ HAVING STUDENT_NO = 'A112113';
 
 --13. 학과 별 휴학생 수를 파악하고자 핚다. 학과 번호와 휴학생 수를 표시하는 SQL 문장을 
 --작성하시오. ※
-SELECT D.DEPARTMENT_NO, T.ABSENCE_YN
-FROM TB_DEPARTMENT D, TB_STUDENT T
-WHERE D.DEPARTMENT_NO = T.DEPARTMENT_NO 
+SELECT DEPARTMENT_NO, COUNT(ABSENCE_YN)  
+FROM TB_DEPARTMENT
+JOIN TB_STUDENT USING(DEPARTMENT_NO)
+GROUP BY DEPARTMENT_NO, ABSENCE_YN
+HAVING ABSENCE_YN = 'Y'
+ORDER BY DEPARTMENT_NO;
+
+
 
 --14.  춘 대학교에 다니는 동명이인(同名異人) 학생들의 이름을 찾고자 핚다. 어떤 SQL 
 --문장을 사용하면 가능하겠는가? ※
+
+
+
 
 
 --15. 학번이 A112113 인 김고운 학생의 년도, 학기 별 평점과 년도 별 누적 평점 , 총 
