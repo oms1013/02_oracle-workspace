@@ -292,7 +292,7 @@ GROUP BY STUDENT_NO,  STUDENT_NAME;
 --SELECT DEPARTMENT_NAME(TB_DEPARTMENT), STUDENT_NAME(TB_STUDENT), 
 -- COACH_PROFESSOR_NO(TB_STUDENT), PROFESSOR_NAME(PROFESSOR_NAME)
 
-SELECT DEPARTMENT_NAME, STUDENT_NAME, PROFESSOR_NAME
+SELECT DEPARTMENT_NAME AS "학과이름", STUDENT_NAME AS "학생이름", PROFESSOR_NAME AS "지도교수이름"
 FROM TB_STUDENT
 JOIN TB_PROFESSOR USING(DEPARTMENT_NO)
 JOIN TB_DEPARTMENT USING(DEPARTMENT_NO)
@@ -309,46 +309,196 @@ SELECT STUDENT_NAME, TERM_NO
 FROM TB_GRADE 
 JOIN TB_CLASS USING (CLASS_NO)
 JOIN TB_STUDENT USING (STUDENT_NO)
-WHERE CLASS_NO = 'C2604100'  AND SUBSTR(TERM_NO,1,4) = '2007'
+WHERE CLASS_NO = 'C2604100'  AND SUBSTR(TERM_NO,1,4) = '2007';
 
 
 --13. 예체능 계열 과목 중 과목 담당교수를 핚 명도 배정받지 못핚 과목을 찾아 그 과목 
---이름과 학과 이름을 출력하는 SQL 문장을 작성하시오.
---담당교수 
---과목이름  
---학과이름  TB_DEPARTMENT의 TB_CLASS,학과번호(56~63) , CATEGORY 예체능
+--이름과 학과 이름을 출력하는 SQL 문장을 작성하시오. ※
 
-SELECT
-FROM 
-WHERE CO
+--TB_CLASS_PROFESSOR             CLASS_NO, PROFFESOR_NO       CLASS_NO
+--교수가 없음
+--WHERE PROFESSOR_NO IS NULL
+
+--TB_CLASS  CLASS_NAME            DEPARTMENT_NO                         CLASS_NO
+--수업 이름
+
+SELECT CLASS_NAME, DEPARTMENT_NAME
+FROM TB_CLASS_PROFESSOR
+JOIN TB_CLASS_PROFESSOR USING (CLASS_NO) 
+JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
+WHERE CATEGORY = '예체능' AND PROFESSOR_NO IS NULL;
 
 
+SELECT DEPARTMENT_NAME
+FROM TB_DEPARTMENT
+WHERE CATEGORY = '예체능' AND DEPARTMENT_NAME IS NULL;
 
 --14. 춘 기술대학교 서반아어학과 학생들의 지도교수를 게시하고자 핚다. 학생이름과 
 --지도교수 이름을 찾고 맊일 지도 교수가 없는 학생일 경우 "지도교수 미지정?으로 
 --표시하도록 하는 SQL 문을 작성하시오. 단,  출력헤더는 ?학생이름?, ?지도교수?로 
---표시하며 고학번 학생이 먼저 표시되도록 핚다. 
+--표시하며 고학번 학생이 먼저 표시되도록 핚다.
+
+SELECT D.STUDENT_NAME AS "학생이름", PROFESSOR_NAME AS "지도교수"
+FROM TB_STUDENT D
+JOIN TB_PROFESSOR ON (COACH_PROFESSOR_NO = PROFESSOR_NO)
+WHERE D.DEPARTMENT_NO = 20; 
 
 --15. 휴학생이 아닌 학생 중 평점이 4.0 이상인 학생을 찾아 그 학생의 학번, 이름, 학과 
 --이름, 평점을 출력하는 SQL 문을 작성하시오.  
 
+SELECT STUDENT_NO, STUDENT_NAME, DEPARTMENT_NAME, AVG(POINT)
+FROM TB_STUDENT
+JOIN TB_GRADE USING (STUDENT_NO)
+JOIN TB_DEPARTMENT USING(DEPARTMENT_NO)
+GROUP BY STUDENT_NO, ABSENCE_YN, STUDENT_NAME,DEPARTMENT_NAME
+HAVING AVG(POINT) > 4.0 AND ABSENCE_YN = 'N';
 
---16. 홖경조경학과 젂공과목들의 과목 별 평점을 파악핛 수 있는 SQL 문을 작성하시오.
 
+--16. 홖경조경학과 젂공과목들의 과목 별 평점을 파악핛 수 있는 SQL 문을 작성하시오.※
+-- 학과이름,  --전공과목 , --과목별 평점 
+
+
+--점수, TB_GRADE의 POINT, 나중에 과목별로 묶어야함               CLASS_NO      
+
+--학과이름, TB_DEPARTMENT의 DEPARTMENT_NAME                               
+
+--TB_CLASS의 전공과목. CLASS_TYPE                             CLASS_NO    
+SELECT CLASS_TYPE, AVG(POINT)
+FROM TB_CLASS
+JOIN TB_GRADE USING (CLASS_NO)
+JOIN TB_DEPARTMENT USING (DEPARTMENT_NO) 
+GROUP BY CLASS_TYPE, POINT
+HAVING DEPARTMENT_NAME = '환경조경학과';
 
 --17. 춘 기술대학교에 다니고 있는 최경희 학생과 같은 과 학생들의 이름과 주소를 출력하는 
---SQL 문을 작성하시오.
+--SQL 문을 작성하시오.※
+--학생 이름,   학생 주소, 과 이름 ,
+--TB_STUDENT의 STUDENT NAME학생이름, STUDENT_ADDRESS 학생주소 
+--TB_DEPARTMENT의 DEPARTMENT_NAME 과 이름 
+
+SELECT STUDENT_NAME, STUDENT_ADDRESS
+FROM TB_STUDENT
+JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
+WHERE DEPARTMENT_NO       '최경희';
+
 
 
 --18. 국어국문학과에서 총 평점이 가장 높은 학생의 이름과 학번을 표시하는 SQL문을 
---작성하시오.
+--작성하시오.※
+SELECT 
+
+
 
 --19. 춘 기술대학교의 "홖경조경학과"가 속핚 같은 계열 학과들의 학과 별 젂공과목 평점을 
 --파악하기 위핚 적젃핚 SQL 문을 찾아내시오. 단, 출력헤더는 "계열 학과명", 
 --"젂공평점"으로 표시되도록 하고, 평점은 소수점 핚 자리까지맊 반올림하여 표시되도록 
---핚다.
+--핚다.※
 
 
+----------------------------------DDL--------------------------------------
+--1. 계열 정보를 저장핛 카테고리 테이블을 맊들려고 핚다. 다음과 같은 테이블을 
+--작성하시오. 
+
+CREATE TABLE TB_CATEGORY
+ ADD
+
+
+--2. 과목 구분을 저장핛 테이블을 맊들려고 핚다. 다음과 같은 테이블을 작성하시오.
+
+
+--3. TB_CATAGORY 테이블의 NAME 컬럼에 PRIMARY KEY를 생성하시오. 
+--(KEY 이름을 생성하지 않아도 무방함. 맊일 KEY 이를 지정하고자 핚다면 이름은 본인이 
+--알아서 적당핚 이름을 사용핚다.) 
+
+
+--4. TB_CLASS_TYPE 테이블의 NAME 컬럼에 NULL 값이 들어가지 않도록 속성을 변경하시오.
+
+
+--5. 두 테이블에서 컬럼 명이 NO인 것은 기존 타입을 유지하면서 크기는 10 으로, 컬럼명이 
+--NAME 인 것은 마찪가지로 기존 타입을 유지하면서 크기 20 으로 변경하시오.
+
+--6. 두 테이블의 NO 컬럼과 NAME 컬럼의 이름을 각 각 TB_ 를 제외핚 테이블 이름이 앞에 
+--붙은 형태로 변경핚다. 
+--(ex. CATEGORY_NAME)
+
+
+--7. TB_CATAGORY 테이블과 TB_CLASS_TYPE 테이블의 PRIMARY KEY 이름을 다음과 같이 
+--변경하시오. 
+--Primary Key 의 이름은 ?PK_ + 컬럼이름?으로 지정하시오. (ex. PK_CATEGORY_NAME )
+
+
+--8. 다음과 같은INSERT 문을 수행핚다. 
+--INSERT INTO TB_CATEGORY VALUES ('공학','Y'); 
+--INSERT INTO TB_CATEGORY VALUES ('자연과학','Y'); 
+--INSERT INTO TB_CATEGORY VALUES ('의학','Y'); 
+--INSERT INTO TB_CATEGORY VALUES ('예체능','Y'); 
+--INSERT INTO TB_CATEGORY VALUES ('인문사회','Y'); 
+--COMMIT; 
+
+
+--9.TB_DEPARTMENT 의 CATEGORY 컬럼이 TB_CATEGORY 테이블의 CATEGORY_NAME 컬럼을 부모 
+--값으로 참조하도록 FOREIGN KEY를 지정하시오. 이 때 KEY 이름은 
+--FK_테이블이름_컬럼이름으로 지정핚다. (ex. FK_DEPARTMENT_CATEGORY ) 
+
+
+--10. 춘 기술대학교 학생들의 정보맊이 포함되어 있는 학생일반정보 VIEW를 맊들고자 핚다. 
+--아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. 
+
+
+
+--11. 춘 기술대학교는 1년에 두 번씩 학과별로 학생과 지도교수가 지도 면담을 진행핚다. 
+--이를 위해 사용핛 학생이름, 학과이름, 담당교수이름 으로 구성되어 있는 VIEW 를 맊드시오. 
+--이때 지도 교수가 없는 학생이 있을 수 있음을 고려하시오 (단, 이 VIEW 는 단순 SELECT 
+--맊을 핛 경우 학과별로 정렬되어 화면에 보여지게 맊드시오.) 
+
+
+--12. 모든 학과의 학과별 학생 수를 확인핛 수 있도록 적젃핚 VIEW 를 작성해 보자.
+
+
+--13. 위에서 생성핚 학생일반정보 View를 통해서 학번이 A213046인 학생의 이름을 본인 
+--이름으로 변경하는 SQL 문을 작성하시오. 
+
+
+--14. 13 번에서와 같이 VIEW를 통해서 데이터가 변경될 수 있는 상황을 막으려면 VIEW를 
+--어떻게 생성해야 하는지 작성하시오. 
+
+
+--15. 춘 기술대학교는 매년 수강신청 기갂맊 되면 특정 인기 과목들에 수강 신청이 몰려 
+--문제가 되고 있다. 최근 3년을 기준으로 수강인원이 가장 맋았던 3 과목을 찾는 구문을 
+--작성해보시오.
+
+
+----------------------------------DML-------------------------------------
+--1. 과목유형 테이블(TB_CLASS_TYPE)에 아래와 같은 데이터를 입력하시오.
+
+
+-- 2. 춘 기술대학교 학생들의 정보가 포함되어 있는 학생일반정보 테이블을 맊들고자 핚다. 
+--아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. (서브쿼리를 이용하시오)
+
+
+ --3. 국어국문학과 학생들의 정보맊이 포함되어 있는 학과정보 테이블을 맊들고자 핚다. 
+--아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. (힌트 : 방법은 다양함, 소신껏 
+--작성하시오)
+
+
+--4. 현 학과들의 정원을 10% 증가시키게 되었다. 이에 사용핛 SQL 문을 작성하시오. (단, 
+--반올림을 사용하여 소수점 자릿수는 생기지 않도록 핚다) 
+
+--5. 학번 A413042 인 박건우 학생의 주소가 "서울시 종로구 숭인동 181-21 "로 변경되었다고 
+--핚다. 주소지를 정정하기 위해 사용핛 SQL 문을 작성하시오. 
+
+
+--6. 주민등록번호 보호법에 따라 학생정보 테이블에서 주민번호 뒷자리를 저장하지 않기로 
+--결정하였다. 이 내용을 반영핛 적젃핚 SQL 문장을 작성하시오. 
+--(예. 830530-2124663 ==> 830530 )  
+
+
+--7. 의학과 김명훈 학생은 2005년 1학기에 자신이 수강핚 '피부생리학' 점수가 
+--잘못되었다는 것을 발견하고는 정정을 요청하였다. 담당 교수의 확인 받은 결과 해당 
+--과목의 학점을 3.5로 변경키로 결정되었다. 적젃핚 SQL 문을 작성하시오. 
+
+
+--8. 성적 테이블(TB_GRADE) 에서 휴학생들의 성적항목을 제거하시오.
 
 
 
