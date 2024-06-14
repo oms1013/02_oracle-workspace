@@ -133,13 +133,14 @@ FROM EMPLOYEE;
 SELECT EMP_NAME, RPAD(EMAIL, 20, '#') --오른쪽정렬
 FROM EMPLOYEE; 
 
--- 주민번호 852583 - 2****** (마스킹처리)
+-- 주민번호 852583 - 2****** (마스킹처리) ☆☆
 SELECT RPAD('850101-2', 14, '*')
 FROM DUAL;
 
 
 --주민번호 마스킹 : SUBSTR함수 + RPAD함수
 --SELECT EMP_NAME, SUBSTAR(EMP_NO,1,8) ||'******' 이 방법도 가능
+--☆☆☆
 SELECT EMP_NAME, RPAD(SUBSTR(EMP_NO, 1, 8), 14, '*') AS "주민번호"
 FROM EMPLOYEE;
 
@@ -232,6 +233,7 @@ SELECT 'ABC' || '초콜릿' ||'이이잉' FROM DUAL;
       
 */
 
+--☆☆
 SELECT EMP_NAME, EMAIL, REPLACE(EMAIL, 'kh.or.kr', 'gmail.com')
 -- EMAIL의 도메인 내에 'kh.or.kr'을 'gmail.com'으로 변경
 FROM EMPLOYEE; 

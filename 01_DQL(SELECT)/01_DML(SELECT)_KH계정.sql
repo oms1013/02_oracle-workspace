@@ -344,7 +344,7 @@ SELECT EMP_ID, EMP_NAME, EMAIL
 FROM EMPLOYEE 
 WHERE EMAIL LIKE '___$_%' ESCAPE '$'; -- $를 만나면 거기서부턴 와일드카드가 아니
 --니까 탈출해라. 즉 뒤의 _는 와일드카드가 아님. 즉 4번째에 _가 들어가는 결과값만 출력
-
+--☆☆☆
 --위의 사원들이 아닌 그 외의 사원들을 조회하고자 하면?
 SELECT EMP_ID, EMP_NAME, EMAIL
 FROM EMPLOYEE 
