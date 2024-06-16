@@ -155,11 +155,27 @@ FROM EMPLOYEE;
 --SQL Final Workshop 
 
 CREATE TABLE TB_BOOK_ TRANSLATOR(
-    
-    
+    TB_BOOK VARCHAR(50), --도서 기본 정보 관리 테이블 
+    TB_WRITE VARCHAR(20) --작가(원저자/번역자) 기본 정보 관리 테이블  
+    TB_PUBLISHER VARCHAR(30)--출판사 기본 정보 관리 테이블 
+    TB_BOOK_AUTHOR VARCHAR(30)--도서 및 도서의 저자 정보 관리 테이블 
+    SQL Final Workshop 
     NO VARCHAR2(5) PRIMARY KEY,
     --기본키지정
     NAME VARCHAR2(10)
+);
+
+
+CREATE TABLE MEMBER(
+    MEM_NO NUMBER,
+    MEM_ID VARCHAR2(20),
+    MEM_PWD VARCHAR2(20),
+    MEM_NAME VARCHAR2(20),
+    GENDER CHAR(3),
+    PHONE VARCHAR2(13),
+    EMAIL VARCHAR2(50),
+    MEM_DATE DATE
+    
 );
 
 
@@ -175,15 +191,15 @@ CREATE TABLE TB_BOOK_ TRANSLATOR(
 
 --12. 2007년도에 출판된 번역서 이름과 번역자(역자)를 표시하는 SQL 구문을 작성하시오. 
 
-SELECT *
 
 
 
 
-
+-------------------------------VIEW 문제---------------------------------
 --13. 12번 결과를 활용하여 대상 번역서들의 출판일을 변경할 수 없도록 하는 뷰를 생성하는 SQL 
 --구문을 작성하시오. (뷰 이름은 “VW_BOOK_TRANSLATOR”로 하고 도서명, 번역자, 출판일이 
---표시되도록 할 것) ※※
+--표시되도록 할 것) --VIEW 문제
+-------------------------------VIEW 문제---------------------------------
 
 
 
@@ -193,7 +209,14 @@ SELECT *
 -- 
 --출판사 사무실 전화번호 거래여부 
 --춘 출판사 02-6710-3737 Default 값 사용 
--- 
+
+--                               출판사  사무실  전화번호  거래여부    
+INSERT INTO TB_CATEGORY VALUES ('공학','Y'); 
+INSERT INTO TB_CATEGORY VALUES ('자연과학','Y'); 
+INSERT INTO TB_CATEGORY VALUES ('의학','Y'); 
+INSERT INTO TB_CATEGORY VALUES ('예체능','Y'); 
+INSERT INTO TB_CATEGORY VALUES ('인문사회','Y'); 
+COMMIT; 
 
 
 
@@ -217,22 +240,25 @@ SELECT *
 
 
 --18. 2006년 1월 기준으로 등록된 지 31년 이상 된 작가 이름을 이름순으로 표시하는 SQL 구문을 작성하시오. 
---※※
-
+--
+SELECT WRITER_NM
+FROM TB_WRITER
+WHERE MONTHS_BETWEEN('200601', REGIST_DATE) > 372;
 
 
 --19. 요즘 들어 다시금 인기를 얻고 있는 '황금가지' 출판사를 위한 기획전을 열려고 한다. '황금가지' 
 --출판사에서 발행한 도서 중 재고 수량이 10권 미만인 도서명과 가격, 재고상태를 표시하는 SQL 구문을 
 --작성하시오. 재고 수량이 5권 미만인 도서는 ‘추가주문필요’로, 나머지는 ‘소량보유’로 표시하고, 
 --재고수량이 많은 순, 도서명 순으로 표시되도록 한다.  ※※ 
--- 
+
 
 
 
 
 --20.  '아타트롤' 도서 작가와 역자를 표시하는 SQL 구문을 작성하시오. (결과 헤더는 
 --‘도서명’,’저자’,’역자’로 표시할 것)  ※※
---  
+
+SELECT
 
 
 
