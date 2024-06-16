@@ -458,9 +458,12 @@ COMMIT;
 ALTER TABLE TB_DEPARTMENT
   ADD FOREIGN KEY(CATEGORY) REFERENCES TB_CATEGORY(CATEGORY_NAME);
 
+------------------------------view 문제 ----------------------
 
 --10. 춘 기술대학교 학생들의 정보맊이 포함되어 있는 학생일반정보 VIEW를 맊들고자 핚다. 
 --아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. ※
+
+
 
 
 
@@ -479,6 +482,8 @@ ALTER TABLE TB_DEPARTMENT
 
 --14. 13 번에서와 같이 VIEW를 통해서 데이터가 변경될 수 있는 상황을 막으려면 VIEW를 
 --어떻게 생성해야 하는지 작성하시오. ※
+
+----------------------------------------------------
 
 
 --15. 춘 기술대학교는 매년 수강신청 기갂맊 되면 특정 인기 과목들에 수강 신청이 몰려 
@@ -500,41 +505,93 @@ INSERT INTO TB_CLASS_TYPE VALUES('05', '논문지도');
 
 -- 2. 춘 기술대학교 학생들의 정보가 포함되어 있는 학생일반정보 테이블을 맊들고자 핚다. 
 --아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. (서브쿼리를 이용하시오)
+CREATE TABLE TB_학생일반정보
+    AS SELECT STUDENT_NO,
+    STUDENT_NAME,
+    STUDENT_ADDRESS
+    FROM TB_STUDENT;
+    
+       
+    --TB_STUDENT 
+      -- STUDENT_NO 학번 
+      -- STUDENT_NAME 학생이름
+      -- STUDENT_ADDRESS 학생 주소
+       
 
 
 
  --3. 국어국문학과 학생들의 정보맊이 포함되어 있는 학과정보 테이블을 맊들고자 핚다. 
 --아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. (힌트 : 방법은 다양함, 소신껏 
 --작성하시오)
+CREATE TABLE TB_국어국문학과 AS
+    
+    SELECT STUDENT_NO, -- 학번
+    STUDENT_NAME, -- 이름
+    STUDENT_ADDRESS, -- 주소
+    PROFESSOR_NAME -- 교수이름
+    
+    FROM TB_STUDENT
+    JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
+    JOIN TB_PROFESSOR USING (DEPARTMENT_NO)
+    WHERE DEPARTMENT_NAME = '국어국문학과';
+    
+   --출생년도
+   --교수이름
 
 
 
 --4. 현 학과들의 정원을 10% 증가시키게 되었다. 이에 사용핛 SQL 문을 작성하시오. (단, 
 --반올림을 사용하여 소수점 자릿수는 생기지 않도록 핚다) 
 
+UPDATE TB_DEPARTMENT
+SET CAPACITY = ROUND(CAPACITY*1.1);
+
 
 --5. 학번 A413042 인 박건우 학생의 주소가 "서울시 종로구 숭인동 181-21 "로 변경되었다고 
 --핚다. 주소지를 정정하기 위해 사용핛 SQL 문을 작성하시오. 
 
+SELECT STUDENT_NAME 
+FROM TB_STUDENT
+WHERE STUDENT_NO = 'A413042';
+
+
+ALTER TABLE TB_STUDENT MODIFY STUDENT_ADDRESS VARCHAR2(300);
+
+UPDATE TB_STUDENT
+SET STUDENT_ADDRESS =  "서울시 종로구 숭인동 181-21" --오류 발생
+WHERE STUDENT_NO = 'A413042';
 
 
 --6. 주민등록번호 보호법에 따라 학생정보 테이블에서 주민번호 뒷자리를 저장하지 않기로 
 --결정하였다. 이 내용을 반영핛 적젃핚 SQL 문장을 작성하시오. 
 --(예. 830530-2124663 ==> 830530 )  
 
-
+UPDATE TB_STUDENT
+SET STUDENT_NO = SUBSTR(STUDENT_NO, 1, 6);
 
 --7. 의학과 김명훈 학생은 2005년 1학기에 자신이 수강핚 '피부생리학' 점수가 
 --잘못되었다는 것을 발견하고는 정정을 요청하였다. 담당 교수의 확인 받은 결과 해당 
 --과목의 학점을 3.5로 변경키로 결정되었다. 적젃핚 SQL 문을 작성하시오. 
 
+UPDATE TB_GRADE 
+SET POINT = 3.5
+WHERE STUDENT_NO = 
+    (
+    SELECT STUDENT_NO
+    FROM TB_STUDENT 
+    JOIN TB_CLASS USING (DEPARTMENT_NO)
+    WHERE STUDENT_NAME = '김명훈' AND CLASS_NAME = '피부생리학'
+    AND TERM_NO = '200501'
+);
 
 --8. 성적 테이블(TB_GRADE) 에서 휴학생들의 성적항목을 제거하시오.
+DELETE FROM TB_GRADE
 
-
-
-
-
+WHERE STUDENT_NO IN (
+    SELECT STUDENT_NO
+    FROM TB_STUDENT
+    WHERE ABSENCE_YN = 'Y');
+    
 
 
 
