@@ -95,6 +95,15 @@ WHERE ROWNUM <= 3;
 --9. 작가 정보 테이블의 모든 등록일자 항목이 누락되어 있는 걸 발견하였다. 누락된 등록일자 값을 각 작가의 
 --‘최초 출판도서의 발행일과 동일한 날짜’로 변경시키는 SQL 구문을 작성하시오. (COMMIT 처리할 것) 
 
+--각 작가 최초 출판도서 발행일은 TB_BOOK에 ISSUE_DATE 값
+--그전에 TB_BOOK, TB_WRITER JOIN해야함 
+-- 작가 이름별로 발행일의 최소치만 모으기
+--그대로 모아서 TB_WRITER, REGIST_DATE에통째로 집어넣어야함
+-- 마지막에 WRITER_NM(작가 이름)과 REGIST_DATE 출력 
+
+--TB_WRITER작가정보 테이블의 REGIST_DATE(모든 등록일자 항목) 이 NULL이다. 
+--이 수치를 전부 해당 작가 최초 출판도서 발행일 날짜를 집어넣어야함. COMMIT처리할것
+
 
  UPDATE TB_WRITER
        SET REGIST_DATE =
@@ -104,13 +113,12 @@ WHERE ROWNUM <= 3;
        TB_BOOK
        TB_BOOK_AUTHOR
        TB_WRITER
-        
-        
-           ...    --> 여러개의 컬럼값 동시 변경 가능! (,로 나열해야됨! AND 아님!!)                  
-        [WHERE 조건]; -->생략하면 전체 행의 모든 행의 데이터가 변경된다..! 그래서 꼭 조건 쓰자!
+    WHERE
+            
         
 set
 
+/*
 INSERT ALL 
 WHEN HIRE_DATE <'2000/01/01' THEN 
     INTO EMP_OLD VALUES(EMP_ID, EMP_NAME, HIRE_DATE, SALARY)
@@ -118,23 +126,7 @@ WHEN HIRE_DATE > '2000/01/01' THEN
     INTO EMP_NEW VALUES(EMP_ID, EMP_NAME, HIRE_DATE, SALARY)
 SELECT EMP_ID, EMP_NAME, HIRE_DATE, SALARY
 FROM EMPLOYEE;
-
---각 작가 최초 출판도서 발행일은 TB_BOOK에 ISSUE_DATE 값
-
---그전에 TB_BOOK, TB_WRITER JOIN해야함 
-
--- 작가 이름별로 발행일의 최소치만 모으기
-
---그대로 모아서 TB_WRITER, REGIST_DATE에통째로 집어넣어야함
-
--- 마지막에 WRITER_NM(작가 이름)과 REGIST_DATE 출력 
-
-
-
---TB_WRITER작가정보 테이블의 REGIST_DATE(모든 등록일자 항목) 이 NULL이다. 
---이 수치를 전부 해당 작가 최초 출판도서 발행일 날짜를 집어넣어야함. COMMIT처리할것
-
-
+*/
 
 
 
@@ -155,27 +147,12 @@ FROM EMPLOYEE;
 --SQL Final Workshop 
 
 CREATE TABLE TB_BOOK_ TRANSLATOR(
-    TB_BOOK VARCHAR(50), --도서 기본 정보 관리 테이블 
-    TB_WRITE VARCHAR(20) --작가(원저자/번역자) 기본 정보 관리 테이블  
-    TB_PUBLISHER VARCHAR(30)--출판사 기본 정보 관리 테이블 
-    TB_BOOK_AUTHOR VARCHAR(30)--도서 및 도서의 저자 정보 관리 테이블 
-    SQL Final Workshop 
-    NO VARCHAR2(5) PRIMARY KEY,
-    --기본키지정
-    NAME VARCHAR2(10)
-);
-
-
-CREATE TABLE MEMBER(
-    MEM_NO NUMBER,
-    MEM_ID VARCHAR2(20),
-    MEM_PWD VARCHAR2(20),
-    MEM_NAME VARCHAR2(20),
-    GENDER CHAR(3),
-    PHONE VARCHAR2(13),
-    EMAIL VARCHAR2(50),
-    MEM_DATE DATE
+    TB_BOOK VARCHAR(10)  NOT NULL, 
+    TB_WRITE VARCHAR2(10)  NOT NULL 
+    TRANS_LANG VARCHAR2(60) NULL 
     
+    --기본키지정
+
 );
 
 
@@ -187,11 +164,7 @@ CREATE TABLE MEMBER(
 
 
 
-
-
 --12. 2007년도에 출판된 번역서 이름과 번역자(역자)를 표시하는 SQL 구문을 작성하시오. 
-
-
 
 
 
@@ -199,6 +172,9 @@ CREATE TABLE MEMBER(
 --13. 12번 결과를 활용하여 대상 번역서들의 출판일을 변경할 수 없도록 하는 뷰를 생성하는 SQL 
 --구문을 작성하시오. (뷰 이름은 “VW_BOOK_TRANSLATOR”로 하고 도서명, 번역자, 출판일이 
 --표시되도록 할 것) --VIEW 문제
+
+
+
 -------------------------------VIEW 문제---------------------------------
 
 
@@ -211,20 +187,11 @@ CREATE TABLE MEMBER(
 --춘 출판사 02-6710-3737 Default 값 사용 
 
 --                               출판사  사무실  전화번호  거래여부    
-INSERT INTO TB_CATEGORY VALUES ('공학','Y'); 
-INSERT INTO TB_CATEGORY VALUES ('자연과학','Y'); 
-INSERT INTO TB_CATEGORY VALUES ('의학','Y'); 
-INSERT INTO TB_CATEGORY VALUES ('예체능','Y'); 
-INSERT INTO TB_CATEGORY VALUES ('인문사회','Y'); 
-COMMIT; 
-
-
+INSERT INTO TB_PUBLISHER VALUES ('춘 출판사', '02-6710-3737', DEFAULT); 
 
 
 --15. 동명이인(同名異人) 작가의 이름을 찾으려고 한다. 이름과 동명이인 숫자를 표시하는 SQL 구문을 
 --작성하시오. ※※
-
-
 
 
 --16. 도서의 저자 정보 중 저작 형태(compose_type)가 누락된 데이터들이 적지 않게 존재한다. 해당 컬럼이 
@@ -243,24 +210,29 @@ COMMIT;
 --
 SELECT WRITER_NM
 FROM TB_WRITER
-WHERE MONTHS_BETWEEN('200601', REGIST_DATE) > 372;
-
+WHERE MONTHS_BETWEEN('20060101', REGIST_DATE) > 372
+ORDER BY WRITER_NM;
 
 --19. 요즘 들어 다시금 인기를 얻고 있는 '황금가지' 출판사를 위한 기획전을 열려고 한다. '황금가지' 
 --출판사에서 발행한 도서 중 재고 수량이 10권 미만인 도서명과 가격, 재고상태를 표시하는 SQL 구문을 
 --작성하시오. 재고 수량이 5권 미만인 도서는 ‘추가주문필요’로, 나머지는 ‘소량보유’로 표시하고, 
 --재고수량이 많은 순, 도서명 순으로 표시되도록 한다.  ※※ 
 
-
-
+SELECT BOOK_NM, PRICE, STOCK_QTY 
+FROM TB_PUBLISHER 
+JOIN TB_BOOK USING (PUBLISHER_NM)
+WHERE PUBLISHER_NM = '황금가지' AND STOCK_QTY <10
+ORDER BY STOCK_QTY , BOOK_NM;
 
 
 --20.  '아타트롤' 도서 작가와 역자를 표시하는 SQL 구문을 작성하시오. (결과 헤더는 
 --‘도서명’,’저자’,’역자’로 표시할 것)  ※※
 
-SELECT
-
-
+SELECT BOOK_NM, WRITER_NM --역자, 10번문제
+FROM TB_BOOK 
+JOIN TB_BOOK_AUTHOR USING (BOOK_NO)
+JOIN TB_PUBLISHER USING (PUBLISHER_NM)
+WHERE BOOK_NM = '아타트롤';
 
 
 --21. 현재 기준으로 최초 발행일로부터 만 30년이 경과되고, 재고 수량이 90권 이상인 도서에 대해 도서명, 재고 
@@ -269,7 +241,8 @@ SELECT
 --순으로 표시되도록 할 것)※※
 
 
-
+UPDATE TB_DEPARTMENT
+SET CAPACITY = ROUND(CAPACITY*1.1);
 
 
 

@@ -463,7 +463,14 @@ ALTER TABLE TB_DEPARTMENT
 --10. 춘 기술대학교 학생들의 정보맊이 포함되어 있는 학생일반정보 VIEW를 맊들고자 핚다. 
 --아래 내용을 참고하여 적젃핚 SQL 문을 작성하시오. ※
 
+CREATE VIEW VW_학생일반정보
+ AS SELECT STUDENT_NO, STUDENT_NAME, STUDENT_ADDRESS
+ FROM TB_STUDENT;
+ 
 
+ --학번 STUDENT_NO
+ --학생이름 STUDENT_NAME
+ --주소 STUDENT_ADDRESS
 
 
 
@@ -472,16 +479,54 @@ ALTER TABLE TB_DEPARTMENT
 --이때 지도 교수가 없는 학생이 있을 수 있음을 고려하시오 (단, 이 VIEW 는 단순 SELECT 
 --맊을 핛 경우 학과별로 정렬되어 화면에 보여지게 맊드시오.) ※
 
+--학생이름, 학과이름, 담당교수이름
+--STUDENT_NAME, DEPARTMENT_NAME(TB_DEPARTMENT), COACH_PROFESSOR
+
+DROP VIEW VW_지도면담;
+
+CREATE VIEW VW_지도면담
+ AS SELECT STUDENT_NAME, DEPARTMENT_NAME, PROFESSOR_NAME
+ FROM TB_STUDENT
+ JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
+ JOIN  TB_PROFESSOR ON (PROFESSOR_NO = COACH_PROFESSOR_NO)
+ ORDER BY DEPARTMENT_NAME; 
+ 
+ SELECT * FROM VW_지도면담;
+ --NULL값은
+
 
 --12. 모든 학과의 학과별 학생 수를 확인핛 수 있도록 적젃핚 VIEW 를 작성해 보자. ※
-
+CREATE VIEW VW_학과별학생수 
+ AS SELECT DEPARTMENT_NAME, CAPACITY "STUDENT_COUNT"
+ FROM TB_DEPARTMENT;
+ 
+ SELECT * FROM VW_학과별학생수;
 
 --13. 위에서 생성핚 학생일반정보 View를 통해서 학번이 A213046인 학생의 이름을 본인 
 --이름으로 변경하는 SQL 문을 작성하시오. ※
 
 
+ UPDATE VW_학생일반정보
+            SET 
+            (
+            SELECT STUDENT_NAME 
+            FROM TB_STUDENT
+        
+           WHERE STUDENT_NO = 'A213046')
+            FROM TB_STUDENT;
+
 --14. 13 번에서와 같이 VIEW를 통해서 데이터가 변경될 수 있는 상황을 막으려면 VIEW를 
 --어떻게 생성해야 하는지 작성하시오. ※
+
+
+DROP VIEW VW_학생일반정보;
+
+CREATE VIEW OR REPLACE VW_학생일반정보 
+ AS SELECT STUDENT_NO, STUDENT_NAME, STUDENT_ADDRESS
+ FROM TB_STUDENT
+ WITH READ ONLY; 
+ 
+
 
 ----------------------------------------------------
 
