@@ -35,3 +35,23 @@ CREATE TABLE TEST(
     
 );
 
+DELETE FROM MEMBER WHERE USERID = 'admin';
+
+ROLLBACK;
+
+SELECT USERNAME
+  FROM MEMBER
+  WHERE USERID ='admin'
+   AND USERPWD ='1234';
+
+
+
+
+
+
+
+
+
+
+
+
