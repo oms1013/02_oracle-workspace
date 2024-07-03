@@ -78,6 +78,8 @@ INSERT INTO QUIZ4 VALUES(1, '퀴즈1번', 30);
 INSERT INTO QUIZ4 VALUES(1, '퀴즈222222222번', 40);
 --작동 안하는 이유, 퀴즈 222222번이 VARCHAR2(10)이라 크기에 비해 용량이 모자람
 
+--ALTER를 사용한 값 변경 공부해두자
+
 INSERT INTO QUIZ4 VALUES(1,'퀴즈2번', 40);
 --이래도 안됨. VALUE값에 1이 PRIMARY KEY로 인한 오류 발생
 
@@ -93,3 +95,14 @@ SELECT EMP_NAME, SALARY,
              ELSE '초급개발자'
         END AS "레벨"
     FROM EMPLOYEE;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
